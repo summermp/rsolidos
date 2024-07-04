@@ -171,48 +171,52 @@ def do_chart4():
     # Extract the required columns
     ubigeos_distrito_selected = dfud[['UBIGEO','PERIODO', 'DEPARTAMENTO', 'PROVINCIA','DISTRITO','GPC_DOM', 'QRESIDUOS_DOM', 'QRESIDUOS_NO_DOM', 'QRESIDUOS_MUN']]
 
-    ubigeos_ll_selected = dful[['ubigeo_reniec', 'latitud', 'longitud']]
+    ubigeos_ll_selected = dful[['ubigeo_inei', 'latitud', 'longitud']]
 
     # Reset index to avoid showing the index column
     ubigeos_distrito_selected.reset_index(drop=True, inplace=True)
     ubigeos_ll_selected.reset_index(drop=True, inplace=True)
     ubigeos_ll_selected.index = range(1, len(ubigeos_ll_selected) + 1)
     ubigeos_distrito_selected.index = range(1, len(ubigeos_distrito_selected) + 1)
-
     col1, col2, col3 = st.columns(3)
+    distrito_filtrado = ubigeos_distrito_selected
     with col1:
     # Filter inputs
         departamento = st.selectbox('Seleccione Departamento', ubigeos_distrito_selected['DEPARTAMENTO'].unique())
+        distrito_filtrado = distrito_filtrado[distrito_filtrado['DEPARTAMENTO'] == departamento]
     with col2:
-        provincia = st.selectbox('Seleccione Provincia', ubigeos_distrito_selected['PROVINCIA'].unique())
+        provincia = st.selectbox('Seleccione Provincia', distrito_filtrado['PROVINCIA'].unique())
+        distrito_filtrado = distrito_filtrado[distrito_filtrado['PROVINCIA'] == provincia]
     with col3:
-        distrito = st.selectbox('Seleccione Distrito', ubigeos_distrito_selected['DISTRITO'].unique())
-
-    # Filter the first dataframe
-    distrito_filtrado = ubigeos_distrito_selected[
-        (ubigeos_distrito_selected['DEPARTAMENTO'] == departamento) & 
-        (ubigeos_distrito_selected['PROVINCIA'] == provincia) & 
-        (ubigeos_distrito_selected['DISTRITO'] == distrito)
-    ]
-
+        pass
+        distrito = st.selectbox('Seleccione Distrito', distrito_filtrado['DISTRITO'].unique())
+        distrito_filtrado = distrito_filtrado[distrito_filtrado['DISTRITO'] == distrito]
+        
     # Sum QRESIDUOS_MUN
     distrito_filtrado = distrito_filtrado.assign(QRESIDUOS_MUN_SUM=distrito_filtrado['QRESIDUOS_MUN'].sum())
-
     # Merge the dataframes on UBIGEO and ubigeo_reniec
-    merged_df = pd.merge(distrito_filtrado, ubigeos_ll_selected, left_on='UBIGEO', right_on='ubigeo_reniec')
-
+    merged_df = pd.merge(distrito_filtrado, ubigeos_ll_selected, left_on='UBIGEO', right_on='ubigeo_inei')
+    st.write(merged_df)
     # Plotting
     if not merged_df.empty:
         fig = px.scatter_mapbox(
             merged_df,
             hover_name="DISTRITO",
             hover_data=["DEPARTAMENTO", "PROVINCIA", "QRESIDUOS_MUN_SUM"],
+            title="Total de Residuos por Distrito del 2014 al 2021",
             lat="latitud",
             lon="longitud",
-            zoom=15,
-            height=350
+            zoom=11,
+            height=400,
+            color="QRESIDUOS_MUN_SUM",
+            size="QRESIDUOS_MUN_SUM",
+            # color_continuous_scale="Viridis",  # Cute color scale
+            # opacity=0.7,  # Cute opacity level
+            labels={"QRESIDUOS_MUN_SUM": "Total Residuos "},
+            center={"lat": merged_df["latitud"].mean(), "lon": merged_df["longitud"].mean()},
         )
         fig.update_layout(mapbox_style="open-street-map")
+        # Customize map layout
         st.plotly_chart(fig)
 
         # Plot bar chart by PERIODO
