@@ -22,6 +22,8 @@ text_style = """
 st.markdown(text_style, unsafe_allow_html=True)
 # Título principal de la pagina
 st.markdown("<h2 class='title_text'>Residuos Municipales (2014-2021)<h3>" , unsafe_allow_html=True)
+
+
 # Cargar el archivo CSV en un DataFrame
 @st.cache_data
 def load_data():
@@ -30,7 +32,15 @@ def load_data():
     df["PERIODO"] = df["PERIODO"].astype(int)
     return df
 
+@st.cache_data
+def load_tb_ubigeos():
+    ubigeos_ll = 'TB_UBIGEOS.csv'
+    dful = pd.read_csv(ubigeos_ll, encoding="latin1", delimiter=";", index_col=0)
+    return dful
+
 df = load_data()
+dful = load_tb_ubigeos()
+dfud = df
 
 @st.cache_data
 def process_data(df):
@@ -77,6 +87,8 @@ def do_chart1():
         font=dict(family="Arial", size=12, color="black"),
     )
     st.plotly_chart(fig, use_container=True)
+
+
     st.markdown("*Gráfica 1: El gráfico representa la proporción expresada en porcentajes de la cantidad de residuos sólidos domiciliarios por año*")
     st.info('En la gráfica se logra observar la comparación de la cantidad de residuos sólidos domiciliarios que fueron registrados durante el periodo 2019 al 2022 y la proporción que representan respecto al 100% del total de los datos registrados, de los cuales se puede destacar que el año 2019 y 2020 tienen un porcentaje igual de distribución y lo mismo se logra observar para los años 2021 y 2022, pero es importante destacar que los 2 últimos años del periodo fueron los que mayor porcentaje de residuos sólidos domiciliarios registraron. ', icon="😀")
 # Función para generar el segundo gráfico
@@ -156,9 +168,79 @@ def do_chart3():
     st.info('Tener en cuenta que el territorio  peruano está dividido en 3 regiones naturales: costa, sierra y selva. Esta división se basa en las características topográficas y climáticas de cada región,es por ello, que en la gráfica se puede apreciar que el mismo departamento se encuentra en diferentes regiones. Por ejemplo, el departamento de Piura que se encuentra ubicado en la zona norte del país, está distribuido geográficamente en la costa y sierra, como consecuencia se pueden apreciar playas, ríos y montañas dentro de un mismo territorio.', icon="🔎")
 # Función para generar el cuarto gráfico    
 def do_chart4():
-    # Información general sobre los datos
-    st.subheader('Resumen estadístico')
-    st.write(df.describe())
+    # Extract the required columns
+    ubigeos_distrito_selected = dfud[['UBIGEO','PERIODO', 'DEPARTAMENTO', 'PROVINCIA','DISTRITO','GPC_DOM', 'QRESIDUOS_DOM', 'QRESIDUOS_NO_DOM', 'QRESIDUOS_MUN']]
+
+    ubigeos_ll_selected = dful[['ubigeo_reniec', 'latitud', 'longitud']]
+
+    # Reset index to avoid showing the index column
+    ubigeos_distrito_selected.reset_index(drop=True, inplace=True)
+    ubigeos_ll_selected.reset_index(drop=True, inplace=True)
+    ubigeos_ll_selected.index = range(1, len(ubigeos_ll_selected) + 1)
+    ubigeos_distrito_selected.index = range(1, len(ubigeos_distrito_selected) + 1)
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+    # Filter inputs
+        departamento = st.selectbox('Seleccione Departamento', ubigeos_distrito_selected['DEPARTAMENTO'].unique())
+    with col2:
+        provincia = st.selectbox('Seleccione Provincia', ubigeos_distrito_selected['PROVINCIA'].unique())
+    with col3:
+        distrito = st.selectbox('Seleccione Distrito', ubigeos_distrito_selected['DISTRITO'].unique())
+
+    # Filter the first dataframe
+    distrito_filtrado = ubigeos_distrito_selected[
+        (ubigeos_distrito_selected['DEPARTAMENTO'] == departamento) & 
+        (ubigeos_distrito_selected['PROVINCIA'] == provincia) & 
+        (ubigeos_distrito_selected['DISTRITO'] == distrito)
+    ]
+
+    # Sum QRESIDUOS_MUN
+    distrito_filtrado = distrito_filtrado.assign(QRESIDUOS_MUN_SUM=distrito_filtrado['QRESIDUOS_MUN'].sum())
+
+    # Merge the dataframes on UBIGEO and ubigeo_reniec
+    merged_df = pd.merge(distrito_filtrado, ubigeos_ll_selected, left_on='UBIGEO', right_on='ubigeo_reniec')
+
+    # Plotting
+    if not merged_df.empty:
+        fig = px.scatter_mapbox(
+            merged_df,
+            hover_name="DISTRITO",
+            hover_data=["DEPARTAMENTO", "PROVINCIA", "QRESIDUOS_MUN_SUM"],
+            lat="latitud",
+            lon="longitud",
+            zoom=15,
+            height=350
+        )
+        fig.update_layout(mapbox_style="open-street-map")
+        st.plotly_chart(fig)
+
+        # Plot bar chart by PERIODO
+        fig = px.bar(
+        distrito_filtrado,
+        x='PERIODO',
+        y=['QRESIDUOS_DOM', 'QRESIDUOS_NO_DOM'],
+        barmode='group',
+        title='QRESIDUOS_DOM y QRESIDUOS_NO_DOM por PERIODO',
+        color_discrete_map={'QRESIDUOS_DOM': 'green', 'QRESIDUOS_NO_DOM': 'gray'}
+        )
+        # Customize hover template
+        fig.update_traces(
+            hovertemplate='<b style="color:red;">Periodo</b>: %{x}<br><b style="color:blue;">Cantidad</b>: %{y:.2f} <b style="color:black;">Ton/Año</b>'
+        )
+
+        fig.update_layout(
+        xaxis_title='Periodo',
+        yaxis_title='Cantidad',
+        yaxis_tickformat=',.2f',  # Format y-axis ticks as whole numbers
+        font=dict(size=10),  # Set font size
+        plot_bgcolor='rgba(0,0,0,0)', # Transparent background
+        legend_title_text='TIPO DE RESIDUOS'
+    )
+
+        st.plotly_chart(fig)
+    else:
+        st.write("Datos no encontrado.")
 
 # Función para mostrar información sobre el proyecto
 def do_acerca():
