@@ -52,29 +52,37 @@ def process_data(df):
 def do_chart1():
     global df
     sum_by_periodo = df.groupby("PERIODO")["QRESIDUOS_MUN"].sum().reset_index()
+    # Crear un gráfico de pastel (donut chart) utilizando plotly
+    pull_values = [0.1] + [0] * (len(sum_by_periodo) - 1)
     fig = go.Figure()
-    # Crear un gráfico de pastel (donut chart) utilizando plotly.express
+    # Resaltar el primer periodo (2014)
     fig.add_trace(go.Pie(
         labels=sum_by_periodo["PERIODO"],
         values=sum_by_periodo["QRESIDUOS_MUN"],
         texttemplate="%{label}<br>%{percent:.2%}",
-        hole=0.6,
+        hole=0.4,
         showlegend=True,
         hovertemplate="<b>Año</b>: %{label}<br>"
-                      "<b>Total</b>: %{value:.0f}<br>"
-                      "<b>Porcentaje</b>: %{percent:.2%}<br>"
-                      "<extra></extra>",
+                    "<b>Total</b>: %{value:.2f} Ton/Año<br>"
+                    "<b>Porcentaje</b>: %{percent:.2%}<br>"
+                    "<extra></extra>",
         textinfo='percent+value',
-        pull=[0.1] * len(sum_by_periodo),
+        # pull=[0.1] * len(sum_by_periodo),
+        pull=pull_values,
         marker=dict(colors=px.colors.qualitative.Set3),
+        sort=False  # Desactivar el ordenamiento automático
     ))
+    # Use `hole` to create a donut-like pie chart
+    fig.update_traces(hole=.4, hoverinfo="label+percent")
+    # Anotación central
     fig.add_annotation(
-        text="RESIDUOS MUNICIPALES",
+        text="RR.SS",
         x=0.5,
         y=0.5,
         showarrow=False,
         font=dict(size=20)
     )
+
     fig.update_layout(
         title="Residuos municipales Ton/Año | 2014 - 2021",
         legend=dict(
@@ -86,8 +94,8 @@ def do_chart1():
         ),
         font=dict(family="Arial", size=12, color="black"),
     )
-    st.plotly_chart(fig, use_container=True)
 
+    st.plotly_chart(fig, use_container_width=True)
 
     st.markdown("*Gráfica 1: El gráfico representa la proporción expresada en porcentajes de la cantidad de residuos sólidos domiciliarios por año*")
     st.info('En la gráfica se logra observar la comparación de la cantidad de residuos sólidos domiciliarios que fueron registrados durante el periodo 2019 al 2022 y la proporción que representan respecto al 100% del total de los datos registrados, de los cuales se puede destacar que el año 2019 y 2020 tienen un porcentaje igual de distribución y lo mismo se logra observar para los años 2021 y 2022, pero es importante destacar que los 2 últimos años del periodo fueron los que mayor porcentaje de residuos sólidos domiciliarios registraron. ', icon="😀")
