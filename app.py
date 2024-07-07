@@ -298,16 +298,6 @@ def do_nosotros():
         """)
     col1, col2 = st.columns([2, 2])
     with col1:
-        st.image("lory.jpeg")
-    with col2:
-        st.write("")
-        st.markdown("""
-        ## Iory Huarca Astete
-        ##### Carrera profesional de Ingeniería Ambiental
-        **correo**: iory.huarca@upch.pe
-        """)
-    col1, col2 = st.columns([2, 2])
-    with col1:
         st.image("maximiliana.jpeg")
     with col2:
         st.write("")
