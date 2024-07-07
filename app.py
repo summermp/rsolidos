@@ -97,8 +97,8 @@ def do_chart1():
 
     st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("*Gráfica 1: El gráfico representa la proporción expresada en porcentajes de la cantidad de residuos sólidos domiciliarios por año*")
-    st.info('En la gráfica se logra observar la comparación de la cantidad de residuos sólidos domiciliarios que fueron registrados durante el periodo 2019 al 2022 y la proporción que representan respecto al 100% del total de los datos registrados, de los cuales se puede destacar que el año 2019 y 2020 tienen un porcentaje igual de distribución y lo mismo se logra observar para los años 2021 y 2022, pero es importante destacar que los 2 últimos años del periodo fueron los que mayor porcentaje de residuos sólidos domiciliarios registraron. ', icon="😀")
+    st.markdown("*Gráfica 1: El gráfico representa la proporción expresada en porcentajes de la cantidad de residuos sólidos municipales por año*")
+    st.info('En el gráfico se presenta una comparación detallada de la cantidad de residuos sólidos municipales registrados entre 2014 y 2021, junto con su proporción respecto al total acumulado en dicho período. La visualización destaca una tendencia ascendente en el porcentaje de residuos municipales, evidenciando un incremento constante en cada intervalo analizado. ', icon="😀")
 # Función para generar el segundo gráfico
 def do_chart2():
     sum_residuos_urbanos = df.groupby("DEPARTAMENTO")["QRESIDUOS_MUN"].sum().reset_index()
@@ -119,7 +119,7 @@ def do_chart2():
     )
     st.plotly_chart(fig)
     st.markdown("*Gráfica 2: El gráfico representa los residuos Municipales por departamento expresada en millones de toneladas*")
-    st.warning('En el gráfico presentado podemos observar que en la capital del Perú Lima, es una de las ciudades más urbanizadas , de igual forma la más poblada del país y, por lo tanto, genera una gran cantidad de residuos sólidos domiciliarios.  ', icon="😀")
+    st.warning('El gráfico revela que Lima, la capital y la ciudad más urbanizada y poblada de Perú, generó la mayor cantidad de residuos municipales entre 2014 y 2021. Este hecho resalta su significativa producción de residuos sólidos municipales. ', icon="😀")
 # Función para generar el tercer gráfico
 def do_chart3():
     # df_grouped = process_data(df)
@@ -172,8 +172,8 @@ def do_chart3():
 
     # # Mostrar el gráfico en Streamlit
     # st.write(f"QRESIDUOS_MUN by DEPARTAMENTO for PERIODO {selected_periodo}")
-    st.markdown("*Gráfica 3: La gráfica muestra la diferencia de consumos de residuos sólidos domiciliarios por departamento con su respectiva región.*")
-    st.info('Tener en cuenta que el territorio  peruano está dividido en 3 regiones naturales: costa, sierra y selva. Esta división se basa en las características topográficas y climáticas de cada región,es por ello, que en la gráfica se puede apreciar que el mismo departamento se encuentra en diferentes regiones. Por ejemplo, el departamento de Piura que se encuentra ubicado en la zona norte del país, está distribuido geográficamente en la costa y sierra, como consecuencia se pueden apreciar playas, ríos y montañas dentro de un mismo territorio.', icon="🔎")
+    st.markdown("*Gráfica 3: La gráfica muestra la cantidad de residuos sólidos municipales por departamento en el periodo seleccionado.*")
+    st.info('El gráfico lineal muestra la evolución de la cantidad de residuos municipales generados en distintos períodos. Destaca notablemente la ciudad de Lima, que consistentemente ocupa el primer lugar en generación de residuos municipales en cada uno de los períodos analizados.', icon="🔎")
 # Función para generar el cuarto gráfico    
 def do_chart4():
     # Extract the required columns
@@ -226,7 +226,7 @@ def do_chart4():
         fig.update_layout(mapbox_style="open-street-map")
         # Customize map layout
         st.plotly_chart(fig)
-
+        st.info('El gráfico Scatter Mapbox muestra la cantidad total de residuos municipales generados en el distrito seleccionado durante el período 2014-2021. Esta visualización proporciona una representación geoespacial precisa de los niveles de generación de residuos en dicho distrito.', icon="🔎")
         # Plot bar chart by PERIODO
         fig = px.bar(
         distrito_filtrado,
@@ -251,6 +251,7 @@ def do_chart4():
     )
 
         st.plotly_chart(fig)
+        st.info('La gráfica de barras agrupadas presenta una comparación detallada de la cantidad de residuos domiciliarios y no domiciliarios generados en el distrito seleccionado durante el período 2014-2021. Cada barra del gráfico está segmentada por año, proporcionando una visión clara de la evolución temporal de ambos tipos de residuos. Esta representación permite identificar patrones y tendencias en la generación de residuos, facilitando el análisis estadístico y la toma de decisiones informadas sobre la gestión de residuos en el distrito.', icon="🔎")
     else:
         st.write("Datos no encontrado.")
 
@@ -294,6 +295,36 @@ def do_nosotros():
         ## Iory Huarca Astete
         ##### Carrera profesional de Ingeniería Ambiental
         **correo**: iory.huarca@upch.pe
+        """)
+    col1, col2 = st.columns([2, 2])
+    with col1:
+        st.image("lory.jpeg")
+    with col2:
+        st.write("")
+        st.markdown("""
+        ## Iory Huarca Astete
+        ##### Carrera profesional de Ingeniería Ambiental
+        **correo**: iory.huarca@upch.pe
+        """)
+    col1, col2 = st.columns([2, 2])
+    with col1:
+        st.image("maximiliana.jpeg")
+    with col2:
+        st.write("")
+        st.markdown("""
+        ## Maximiliana, Ramos Guelac
+        ##### Carrera profesional de Ingeniería Ambiental
+        **correo**: maximiliana.ramos@upch.pe
+        """)
+    col1, col2 = st.columns([2, 2])
+    with col1:
+        st.image("mayerly.jpeg")
+    with col2:
+        st.write("")
+        st.markdown("""
+        ## Mayerly, Orosco Taype
+        ##### Carrera profesional de Ingeniería Ambiental
+        **correo**: mayerly.orosco@upch.pe
         """)
 
 # Definición de estilos para la interfaz gráfica
