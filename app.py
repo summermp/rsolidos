@@ -296,6 +296,7 @@ def do_nosotros():
         ##### Carrera profesional de Ingeniería Ambiental
         **correo**: iory.huarca@upch.pe
         """)
+ 
     col1, col2 = st.columns([2, 2])
     with col1:
         st.image("maximiliana.jpeg")
@@ -316,7 +317,7 @@ def do_nosotros():
         ##### Carrera profesional de Ingeniería Ambiental
         **correo**: mayerly.orosco@upch.pe
         """)
-
+    st.markdown("<h5 style='text-align:center;'>¡Conocer nuestra huella de basura es el primer paso para dejar una huella verde!</h5>", unsafe_allow_html=True)
 # Definición de estilos para la interfaz gráfica
 # Estilo del contenedor principal
 styles = {
@@ -440,16 +441,6 @@ def show_menu(menu):
     if menu_selection == 'Inicio':
         if menu['items'][menu_selection]['submenu']:
             pass
-            # col1, col2 = st.columns(2)
-            # selected_year = col1.slider("Seleccione año:", min(df["PERIODO"].unique()), max(df["PERIODO"].unique()))
-            # st.session_state['anio_seleccionado'] = selected_year
-            # filtered_year = df[df["PERIODO"] == selected_year]
-            # reg_nat_values = filtered_year["REG_NAT"].unique()
-            # reg_nat_values = reg_nat_values[~pd.isna(reg_nat_values)]  # Excluir valores NaN
-            # selected_reg_nat = col2.radio("Seleccione región natural:", reg_nat_values, horizontal=True)
-            # st.session_state['df_guardado'] = filtered_year[filtered_year["REG_NAT"] == selected_reg_nat]
-            # st.toast('Seleccionaste año: '+str(selected_year)+' 📅', icon='❤')
-            # st.toast('Seleccionaste región: '+selected_reg_nat+' ⛰️', icon='😍')
     # Lógica para mostrar submenú si está presente
     if menu['items'][menu_selection]['submenu']:
         show_menu(menu['items'][menu_selection]['submenu'])
