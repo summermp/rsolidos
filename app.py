@@ -281,7 +281,7 @@ def do_nosotros():
     with col2:
         st.write("")
         st.markdown("""
-        ## Meyli Flores Huaman
+        ### Meyli Flores Huaman
         ##### Carrera profesional de Ingeniería Ambiental
         **correo**: meyli.flores@upch.pe
         """)
@@ -292,7 +292,7 @@ def do_nosotros():
     with col2:
         st.write("")
         st.markdown("""
-        ## Iory Huarca Astete
+        ### Iory Huarca Astete
         ##### Carrera profesional de Ingeniería Ambiental
         **correo**: iory.huarca@upch.pe
         """)
@@ -303,7 +303,7 @@ def do_nosotros():
     with col2:
         st.write("")
         st.markdown("""
-        ## Maximiliana, Ramos Guelac
+        ### Maximiliana, Ramos Guelac
         ##### Carrera profesional de Ingeniería Ambiental
         **correo**: maximiliana.ramos@upch.pe
         """)
@@ -313,7 +313,7 @@ def do_nosotros():
     with col2:
         st.write("")
         st.markdown("""
-        ## Mayerly, Orosco Taype
+        ### Mayerly, Orosco Taype
         ##### Carrera profesional de Ingeniería Ambiental
         **correo**: mayerly.orosco@upch.pe
         """)
