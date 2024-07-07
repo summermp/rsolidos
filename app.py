@@ -471,15 +471,15 @@ st.sidebar.image('https://www.precayetanovirtual.pe/moodle/pluginfile.php/1/them
 # Llamar a la función para mostrar el menú interactivo
 show_menu(menu)
 # Crear tres columnas en la barra lateral (1:8:1 ratio)
-col1, col2, col3 = st.sidebar.columns([2, 4, 2])
-# Espacio en blanco en la primera y tercera columna para centrar la imagen
-with col1:
-    st.write("")
-# Mostrar una imagen en la segunda columna, probablemente un avatar o logotipo
-with col2:
-    st.image('reaccion.png', use_column_width=True)
-# Espacio en blanco en la tercera columna para centrar la imagen
-with col3:
-    st.write("")
-# Mostrar un texto en la barra lateral después de las columnas y agregar efecto de nieve
+st.sidebar.image('logo.jpeg', use_column_width=True)
+# col1, col2, col3 = st.sidebar.columns([2, 4, 2])
+# # Espacio en blanco en la primera y tercera columna para centrar la imagen
+# with col1:
+#     st.write("")
+# # Mostrar una imagen en la segunda columna, probablemente un avatar o logotipo
+# with col2:
+# # Espacio en blanco en la tercera columna para centrar la imagen
+# with col3:
+#     st.write("")
+# # Mostrar un texto en la barra lateral después de las columnas y agregar efecto de nieve
 st.sidebar.text("Ing. ambiental - 2024")  
